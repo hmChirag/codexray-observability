@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CodeXray Observability Dashboard</title>
+  <style>
+    body { font-family: Arial; background:#121212; color:#eee; padding:20px; }
+    h1 { color:#00c8ff; }
+    .card { background:#1e1e1e; padding:15px; border-radius:10px; margin:10px 0; }
+    button { background:#00c8ff; border:none; padding:8px 15px; border-radius:5px; cursor:pointer; }
+    pre { background:#000; padding:10px; border-radius:5px; color:#0f0; }
+  </style>
+</head>
+<body>
+  <h1>🌡 CodeXray Observability Dashboard</h1>
+  <button id="refreshBtn">🔄 Refresh Metrics</button>
+
+  <div class="card" id="metrics"></div>
+  <div class="card" id="report"></div>
+  <div class="card" id="alerts"></div>
+
+  <script>
+    const token = prompt("Enter your JWT token:");
+
+    async function loadData() {
+      const headers = { Authorization: "Bearer " + token };
+      
+      const [metrics, report, alerts] = await Promise.all([
+        fetch("/api/system/metrics", { headers }),
+        fetch("/api/reports/summary", { headers }),
+        fetch("/api/alerts", { headers })
+      ]);
+
+      document.getElementById("metrics").innerHTML =
+        "<h2>System Metrics</h2><pre>" + JSON.stringify(await metrics.json(), null, 2) + "</pre>";
+      document.getElementById("report").innerHTML =
+        "<h2>Summary Report</h2><pre>" + JSON.stringify(await report.json(), null, 2) + "</pre>";
+      document.getElementById("alerts").innerHTML =
+        "<h2>Recent Alerts</h2><pre>" + JSON.stringify(await alerts.json(), null, 2) + "</pre>";
+    }
+
+    document.getElementById("refreshBtn").addEventListener("click", loadData);
+    loadData();
+  </script>
+</body>
+</html>
