@@ -1,0 +1,8 @@
+echo "[INFO] Server started
+[INFO] Database connected
+[WARN] Disk space low
+[ERROR] Connection timeout
+[ERROR] Connection timeout
+[ERROR] Failed to fetch user data
+[INFO] Health check passed
+[WARN] CPU usage high"
